@@ -1,0 +1,53 @@
+name: Deploy to DigitalOcean Droplet
+
+# متى يُشغَّل هذا الـ Workflow؟
+on:
+  push:
+    branches:
+      - main
+      - master
+  # يمكن تشغيله يدوياً من واجهة GitHub
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy via SSH
+    runs-on: ubuntu-latest
+    # تقييد صلاحيات GITHUB_TOKEN إلى الحد الأدنى المطلوب
+    permissions:
+      contents: read
+
+    steps:
+      # الخطوة 1: الاتصال بالـ Droplet وتنفيذ أوامر النشر
+      - name: Deploy to Droplet
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USER }}
+          key: ${{ secrets.DROPLET_SSH_KEY }}
+          port: ${{ secrets.DROPLET_PORT }}
+          script: |
+            # الانتقال إلى مجلد المشروع على الـ Droplet
+            cd ${{ secrets.DROPLET_PATH }}
+
+            # سحب آخر تغييرات من GitHub (من الفرع المتتبع حالياً)
+            git pull origin $(git symbolic-ref --short HEAD)
+
+            # إعادة بناء وتشغيل البوت باستخدام Docker Compose
+            docker compose up -d --build
+
+            # تنظيف الـ Docker images القديمة لتوفير المساحة
+            docker image prune -f
+
+      # الخطوة 2: التحقق من نجاح النشر
+      - name: Verify Deployment
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USER }}
+          key: ${{ secrets.DROPLET_SSH_KEY }}
+          port: ${{ secrets.DROPLET_PORT }}
+          script: |
+            cd ${{ secrets.DROPLET_PATH }}
+            # عرض حالة الـ containers للتأكد من أن البوت يعمل
+            docker compose ps
