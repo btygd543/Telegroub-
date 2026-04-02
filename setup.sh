@@ -11,7 +11,7 @@ apt-get upgrade -y
 
 # Install required system packages
 echo "[2/6] Installing system dependencies..."
-apt-get install -y python3 python3-pip python3.12-venv git screen ffmpeg
+apt-get install -y python3 python3-pip python3-venv git screen ffmpeg
 
 # Clone or update the repo
 if [ ! -d "Telegroub-" ]; then

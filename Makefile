@@ -1,3 +1,4 @@
+SHELL := /bin/bash
 .PHONY: setup run stop update logs install
 
 # First-time setup on a fresh DigitalOcean Droplet
