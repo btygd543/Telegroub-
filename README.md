@@ -96,7 +96,74 @@ thehamkercat@arch:~$ sudo docker build . -t wbb
 thehamkercat@arch:~$ sudo docker run wbb
 ```
 
-<h2 align="center"> 
+<h2 align="center">
+   ⇝ Deploy on DigitalOcean Droplet (Ubuntu 24.04) ⇜
+</h2>
+
+### Prerequisites
+- A DigitalOcean Droplet running **Ubuntu 24.04 LTS**
+- SSH access to the Droplet (e.g. via [Termius](https://termius.com))
+
+### Step 1 — Connect and prepare the server
+
+```bash
+apt update && apt upgrade -y
+apt install -y python3 python3-pip git screen
+```
+
+### Step 2 — Clone the repository
+
+```bash
+git clone https://github.com/btygd543/Telegroub-
+cd Telegroub-
+```
+
+### Step 3 — Configure the bot
+
+```bash
+cp sample_config.env config.env
+nano config.env   # fill in your BOT_TOKEN, API_ID, API_HASH, MONGO_URL, etc.
+```
+
+### Step 4 — Run the automated setup (installs venv + dependencies + starts bot)
+
+```bash
+make setup
+# or: bash setup.sh
+```
+
+This script will:
+1. Install `python3.12-venv` if missing
+2. Create a virtual environment in `venv/`
+3. Install all Python dependencies from `requirements.txt`
+4. Start the bot inside a `screen` session named `wbb_bot`
+
+---
+
+### Available `make` commands
+
+| Command | Description |
+|---|---|
+| `make setup` | First-time setup: install deps and start the bot |
+| `make run` | Start the bot in a background `screen` session |
+| `make update` | Pull latest code from GitHub and restart the bot |
+| `make stop` | Stop the running bot |
+| `make logs` | Attach to the bot's screen session (detach with `Ctrl+A` then `D`) |
+
+---
+
+### Updating the bot
+
+```bash
+make update
+# or: bash update.sh
+```
+
+This will `git pull`, stop the old bot, reinstall dependencies if needed, and restart it.
+
+---
+
+<h2 align="center">
    ⇝ Write new modules ⇜
 </h2>
 
