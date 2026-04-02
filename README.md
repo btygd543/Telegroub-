@@ -44,6 +44,62 @@
 </p>
 
 <h2 align="center"> 
+   ⇝ Deploy on DigitalOcean Droplet (VPS) ⇜
+</h2>
+
+### First-time setup
+
+```bash
+# 1. Clone the repository (only run this once)
+git clone https://github.com/btygd543/Telegroub-
+cd Telegroub-
+
+# 2. Run the setup script (installs dependencies and creates venv)
+chmod +x setup.sh
+./setup.sh
+
+# 3. Edit the config file with your own values
+nano config.env
+```
+
+> **Note:** Only run `cd Telegroub-` when you are **not** already inside the folder.
+> If your terminal prompt already shows `~/Telegroub-`, you are already inside — skip the `cd` command.
+
+### Run the bot
+
+```bash
+# Activate the virtual environment first
+source venv/bin/activate
+
+# Start the bot
+python3 -m wbb
+
+# Or use make (runs the bot in a background screen session)
+make run
+```
+
+### Update the bot (after `git pull`)
+
+```bash
+# If you're inside ~/Telegroub- already, just run:
+git pull
+./update.sh
+
+# Or with make:
+make update
+```
+
+### Other useful commands
+
+```bash
+make logs    # View live bot logs (Ctrl+A then D to detach)
+make stop    # Stop the bot
+make install # Reinstall Python dependencies
+```
+
+---
+
+<h2 align="center"> 
    ⇝ Install Locally Or On A VPS ⇜
 </h2>
 
